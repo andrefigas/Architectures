@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Architectures</string>
+    <string name="submit">submit</string>
+    <string name="name_hint">Insert your name</string>
+    <string name="submit_success_message">%s saved successfully</string>
+</resources>

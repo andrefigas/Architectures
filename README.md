@@ -1,6 +1,6 @@
 # Architectures
 
-## Select the architecture that your want to study and check the the file tree loaded dinamically
+## Select the architecture that your want to study and check the file tree loaded dynamically
 
 - mvc
 - mvp

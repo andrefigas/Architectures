@@ -1,6 +1,5 @@
 package dev.figas.controller
 
-import android.annotation.SuppressLint
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     private fun injectPerson() {
         requests.add(
             model.injectPerson(
@@ -57,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @SuppressLint("StaticFieldLeak")
     private fun fetchPerson() {
         requests.add(
             model.providePerson(
@@ -99,11 +96,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-/*open class InjectPerson(private val model: PersonModelContract) : AsyncTask<String, Void, Person>() {
-    override fun doInBackground(vararg name: String) = model.injectPerson(Person(name[0]))
-}
-
-open class ProvidePerson(private val model: PersonModelContract) : AsyncTask<Void, Void, Person>() {
-    override fun doInBackground(vararg noArg: Void?) = model.providePerson()
-}*/

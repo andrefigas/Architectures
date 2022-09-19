@@ -19,15 +19,20 @@ class PersonModel(context : Context) : PersonModelContract{
     }
 
     override fun providePerson(onPreExecute : ()->Unit, onPostExecute : (Person)->Unit) : AsyncTask<Void, Void, Person> {
-        return BaseAsyncTask<Void, Person>(onPreExecute,{
+        return BaseAsyncTask<Void, Person>(onPreExecute,
+            doInBackground = {
             Thread.sleep(DELAY)
             Person(preferences.getString(PREF_KEY_NAME,"") as String)
         }, onPostExecute).execute()
 
     }
 
-    override fun injectPerson(person : Person, onPreExecute : ()->Unit, onPostExecute : (Person)->Unit): AsyncTask<String, Void, Person> {
-        return BaseAsyncTask<String , Person>(onPreExecute,{ name ->
+    override fun injectPerson(person : Person,
+                              onPreExecute : ()->Unit,
+                              onPostExecute : (Person)->Unit): AsyncTask<String, Void, Person> {
+        return BaseAsyncTask<String , Person>(
+            onPreExecute,
+            doInBackground = { name ->
             Thread.sleep(DELAY)
             val person = Person(name as String)
             preferences.edit().putString(PREF_KEY_NAME, person.name).commit()

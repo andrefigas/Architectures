@@ -1,4 +1,4 @@
-package dev.figas.viewstate
+package dev.figas.intent.viewstate
 
 import dev.figas.model.Person
 

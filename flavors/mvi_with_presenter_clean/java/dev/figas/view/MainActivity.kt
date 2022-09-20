@@ -12,11 +12,11 @@ import dev.figas.data.repositories.PersonRepository
 import dev.figas.domain.repositories.PersonRepoContract
 import dev.figas.domain.usecases.GetPersonUseCase
 import dev.figas.domain.usecases.UpdatePersonUseCase
-import dev.figas.intent.PersonIntent
+import dev.figas.intent.event.PersonEvent
 import dev.figas.presenter.PersonPresenter
 import dev.figas.presenter.PersonPresenterContract
-import dev.figas.vieweffect.PersonEffect
-import dev.figas.viewstate.PersonState
+import dev.figas.intent.vieweffect.PersonEffect
+import dev.figas.intent.viewstate.PersonState
 
 class MainActivity : AppCompatActivity(), PersonView {
 
@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity(), PersonView {
         setContentView(R.layout.activity_main)
         setupUI()
 
-        presenter.processIntent(PersonIntent.OnLoad)
+        presenter.processIntent(PersonEvent.OnLoad)
     }
 
     private fun setupUI() {
         nameEt = findViewById(R.id.name_et)
         progressPb = findViewById(R.id.progress_pb)
         findViewById<View>(R.id.submit_bt).setOnClickListener {
-            presenter.processIntent(PersonIntent.OnSubmitClicked(nameEt.text.toString()))
+            presenter.processIntent(PersonEvent.OnSubmitClicked(nameEt.text.toString()))
         }
     }
 
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), PersonView {
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.processIntent(PersonIntent.OnRelease)
+        presenter.processIntent(PersonEvent.OnRelease)
     }
 }
 

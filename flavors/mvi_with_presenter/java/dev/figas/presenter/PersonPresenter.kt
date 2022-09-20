@@ -1,28 +1,28 @@
 package dev.figas.presenter
 
 import android.os.AsyncTask
-import dev.figas.intent.PersonIntent
+import dev.figas.intent.event.PersonEvent
+import dev.figas.intent.vieweffect.PersonEffect
+import dev.figas.intent.viewstate.PersonState
 import dev.figas.model.Person
 import dev.figas.model.PersonModelContract
 import dev.figas.view.PersonView
-import dev.figas.vieweffect.PersonEffect
-import dev.figas.viewstate.PersonState
 
 class PersonPresenter(private val view : PersonView, private val model: PersonModelContract) : PersonPresenterContract {
 
     private val requests = mutableListOf<AsyncTask<*, *, *>>()
 
-     override fun processIntent(personIntent: PersonIntent){
-        when(personIntent){
-            is PersonIntent.OnSubmitClicked -> {
-                injectPerson(personIntent.name)
+     override fun processIntent(personEvent: PersonEvent){
+        when(personEvent){
+            is PersonEvent.OnSubmitClicked -> {
+                injectPerson(personEvent.name)
             }
 
-            is PersonIntent.OnLoad -> {
+            is PersonEvent.OnLoad -> {
                 fetchPerson()
             }
 
-            is PersonIntent.OnRelease -> {
+            is PersonEvent.OnRelease -> {
                 release()
             }
         }
@@ -65,5 +65,5 @@ class PersonPresenter(private val view : PersonView, private val model: PersonMo
 }
 
 interface PersonPresenterContract{
-    fun processIntent(personIntent: PersonIntent)
+    fun processIntent(personIntent: PersonEvent)
 }

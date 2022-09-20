@@ -1,4 +1,4 @@
-package dev.figas.vieweffect
+package dev.figas.intent.vieweffect
 
 import dev.figas.domain.models.Person
 

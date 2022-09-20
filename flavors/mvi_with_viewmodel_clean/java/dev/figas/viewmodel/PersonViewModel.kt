@@ -1,30 +1,30 @@
 package dev.figas.viewmodel
 
 import android.os.AsyncTask
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+
 import dev.figas.domain.models.Person
 import dev.figas.domain.usecases.GetPersonUseCase
 import dev.figas.domain.usecases.UpdatePersonUseCase
-import dev.figas.intent.PersonIntent
-import dev.figas.vieweffect.PersonEffect
-import dev.figas.viewstate.PersonState
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import dev.figas.intent.event.PersonEvent
+import dev.figas.intent.vieweffect.PersonEffect
+import dev.figas.intent.viewstate.PersonState
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class PersonViewModel(private val getPersonUseCase: GetPersonUseCase,
                       private val updatePersonUseCase: UpdatePersonUseCase
 ) : ViewModel() {
 
-    private val _uiState : MutableStateFlow<PersonState> = MutableStateFlow(PersonState.Idle)
-    val uiState = _uiState.asStateFlow()
+    private val _uiState : MutableLiveData<PersonState> = MutableLiveData(PersonState.Idle)
+    val uiState = _uiState
 
-    private val _intent : MutableSharedFlow<PersonIntent> = MutableSharedFlow()
-    val intent = _intent.asSharedFlow()
+    private val _events = PublishSubject.create<PersonEvent>()
+    val events : Observable<PersonEvent> = _events
 
-    private val _effect : Channel<PersonEffect> = Channel()
-    val effect = _effect.receiveAsFlow()
+    private val _effect = PublishSubject.create<PersonEffect>()
+    val effect : Observable<PersonEffect> = _effect
 
     private val requests = mutableListOf<AsyncTask<*, *, *>>()
 
@@ -32,25 +32,24 @@ class PersonViewModel(private val getPersonUseCase: GetPersonUseCase,
         subscribeEvents()
     }
 
-    fun sendIntent(event : PersonIntent) {
-        viewModelScope.launch { _intent.emit(event) }
+    fun sendIntent(event : PersonEvent) {
+        _events.onNext(event)
     }
 
     private fun subscribeEvents() {
-        viewModelScope.launch {
-            intent.collect {
-                handleEvent(it)
-            }
+        events.subscribe { event : PersonEvent ->
+            handleEvent(event)
         }
+
     }
 
-    private fun handleEvent(event: PersonIntent) {
+    private fun handleEvent(event: PersonEvent) {
         when (event) {
-           is PersonIntent.OnSubmitClicked -> {
+           is PersonEvent.OnSubmitClicked -> {
                injectPerson(event.name)
            }
 
-            is PersonIntent.OnLoad -> {
+            is PersonEvent.OnLoad -> {
                 fetchPerson()
             }
         }
@@ -61,9 +60,7 @@ class PersonViewModel(private val getPersonUseCase: GetPersonUseCase,
             updatePersonUseCase.execute(Person(name), onPreExecute = {
                 _uiState.value = PersonState.Loading
             }, onPostExecute = { person ->
-                viewModelScope.launch {
-                    _effect.send(PersonEffect.OnPersonSaved(person))
-                }
+                _effect.onNext(PersonEffect.OnPersonSaved(person))
             })
         )
 

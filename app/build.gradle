@@ -134,7 +134,7 @@ dependencies {
     mvvmImplementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     mvvm_cleanImplementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     mvi_with_viewmodelImplementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    mvi_with_viewmodelImplementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-rc01'
-    mvi_with_viewmodel_cleanImplementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-rc01'
     mvi_with_viewmodel_cleanImplementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    mvi_with_viewmodelImplementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    mvi_with_viewmodel_cleanImplementation "io.reactivex.rxjava3:rxjava:3.1.5"
 }

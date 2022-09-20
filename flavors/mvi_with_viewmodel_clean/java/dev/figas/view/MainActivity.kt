@@ -7,7 +7,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.viewModelScope
 
 import dev.figas.R
 import dev.figas.data.mappers.PersonMapper
@@ -15,14 +14,13 @@ import dev.figas.data.repositories.PersonRepository
 import dev.figas.domain.repositories.PersonRepoContract
 import dev.figas.domain.usecases.GetPersonUseCase
 import dev.figas.domain.usecases.UpdatePersonUseCase
-import dev.figas.intent.PersonIntent
+import dev.figas.intent.event.PersonEvent
 
-import dev.figas.vieweffect.PersonEffect
+import dev.figas.intent.vieweffect.PersonEffect
 import dev.figas.viewmodel.PersonViewModel
 import dev.figas.viewmodel.PersonViewModelFactory
-import dev.figas.viewstate.PersonState
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import dev.figas.intent.viewstate.PersonState
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,31 +42,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupUI()
 
-        viewModel.viewModelScope.launch {
-            viewModel.uiState.collect {  personState ->
-                when(personState){
-                    is PersonState.Loading -> {
-                        showLoading()
-                    }
-
-                    is PersonState.Data -> {
-                        hideLoading()
-                        showPersonName(personState.user.name)
-                    }
+        viewModel.uiState.observe(this) {  personState ->
+            when(personState){
+                is PersonState.Loading -> {
+                    showLoading()
                 }
-            }
 
-            viewModel.effect.collect{ effect ->
-                when(effect){
-                    is PersonEffect.OnPersonSaved -> {
-                        hideLoading()
-                        showSavedPerson(effect.person.name)
-                    }
+                is PersonState.Data -> {
+                    hideLoading()
+                    showPersonName(personState.user.name)
                 }
             }
         }
 
-        viewModel.sendIntent(PersonIntent.OnLoad)
+        viewModel.effect.doOnNext{ effect ->
+            when(effect){
+                is PersonEffect.OnPersonSaved -> {
+                    hideLoading()
+                    showSavedPerson(effect.person.name)
+                }
+            }
+        }
+
+        viewModel.sendIntent(PersonEvent.OnLoad)
     }
 
     private fun setupUI() {
@@ -76,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         progressPb = findViewById(R.id.progress_pb)
         findViewById<View>(R.id.submit_bt).setOnClickListener {
             showLoading()
-            viewModel.sendIntent(PersonIntent.OnSubmitClicked(nameEt.text.toString()))
+            viewModel.sendIntent(PersonEvent.OnSubmitClicked(nameEt.text.toString()))
         }
     }
 

@@ -7,12 +7,8 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import dev.figas.R
-import dev.figas.data.mappers.PersonMapper
-import dev.figas.data.repositories.PersonRepository
-import dev.figas.domain.repositories.PersonRepoContract
-import dev.figas.domain.usecases.GetPersonUseCase
-import dev.figas.domain.usecases.UpdatePersonUseCase
 import dev.figas.intent.PersonIntent
+import dev.figas.model.PersonModel
 import dev.figas.presenter.PersonPresenter
 import dev.figas.presenter.PersonPresenterContract
 import dev.figas.vieweffect.PersonEffect
@@ -27,11 +23,7 @@ class MainActivity : AppCompatActivity(), PersonView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repo : PersonRepoContract = PersonRepository(this, PersonMapper())
-        presenter = PersonPresenter(this,
-            GetPersonUseCase(repo),
-            UpdatePersonUseCase(repo)
-        )
+        presenter = PersonPresenter(this, PersonModel(this))
 
         setContentView(R.layout.activity_main)
         setupUI()

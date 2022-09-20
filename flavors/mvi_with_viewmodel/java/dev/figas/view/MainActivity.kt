@@ -10,12 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.viewModelScope
 
 import dev.figas.R
-import dev.figas.data.mappers.PersonMapper
-import dev.figas.data.repositories.PersonRepository
-import dev.figas.domain.repositories.PersonRepoContract
-import dev.figas.domain.usecases.GetPersonUseCase
-import dev.figas.domain.usecases.UpdatePersonUseCase
 import dev.figas.intent.PersonIntent
+import dev.figas.model.PersonModel
 import dev.figas.vieweffect.PersonEffect
 import dev.figas.viewmodel.PersonViewModel
 import dev.figas.viewmodel.PersonViewModelFactory
@@ -32,11 +28,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repo : PersonRepoContract = PersonRepository(this, PersonMapper())
         viewModel = ViewModelProviders.of(
             this, PersonViewModelFactory(
-                GetPersonUseCase(repo),
-                UpdatePersonUseCase(repo)
+                PersonModel(this)
             )
         ).get(PersonViewModel::class.java)
 

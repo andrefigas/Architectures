@@ -2,12 +2,15 @@ package dev.figas.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dev.figas.model.PersonModelContract
+import dev.figas.domain.usecases.GetPersonUseCase
+import dev.figas.domain.usecases.UpdatePersonUseCase
 
-class PersonViewModelFactory(val model : PersonModelContract) : ViewModelProvider.Factory {
+class PersonViewModelFactory(private val getPersonUseCase: GetPersonUseCase,
+                             private val updatePersonUseCase: UpdatePersonUseCase
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(PersonModelContract::class.java)
-            .newInstance(model)
+        return modelClass.getConstructor(GetPersonUseCase::class.java, UpdatePersonUseCase::class.java)
+            .newInstance(getPersonUseCase, updatePersonUseCase)
     }
 
 }

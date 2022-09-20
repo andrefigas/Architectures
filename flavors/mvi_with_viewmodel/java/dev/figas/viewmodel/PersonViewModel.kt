@@ -3,18 +3,16 @@ package dev.figas.viewmodel
 import android.os.AsyncTask
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.figas.domain.models.Person
-import dev.figas.domain.usecases.GetPersonUseCase
-import dev.figas.domain.usecases.UpdatePersonUseCase
 import dev.figas.intent.PersonIntent
+import dev.figas.model.Person
+import dev.figas.model.PersonModelContract
 import dev.figas.vieweffect.PersonEffect
 import dev.figas.viewstate.PersonState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class PersonViewModel(val getPersonUseCase: GetPersonUseCase,
-                      val updatePersonUseCase: UpdatePersonUseCase) : ViewModel() {
+class PersonViewModel(val model: PersonModelContract) : ViewModel() {
 
     private val _uiState : MutableStateFlow<PersonState> = MutableStateFlow(PersonState.Idle)
     val uiState = _uiState.asStateFlow()
@@ -57,7 +55,7 @@ class PersonViewModel(val getPersonUseCase: GetPersonUseCase,
 
     private fun injectPerson(name: String) {
         requests.add(
-            updatePersonUseCase.execute(Person(name), onPreExecute = {
+            model.injectPerson(Person(name), onPreExecute = {
                 _uiState.value = PersonState.Loading
             }, onPostExecute = { person ->
                 viewModelScope.launch {
@@ -70,7 +68,7 @@ class PersonViewModel(val getPersonUseCase: GetPersonUseCase,
 
     private fun fetchPerson() {
         requests.add(
-            getPersonUseCase.execute(onPreExecute = {
+            model.providePerson(onPreExecute = {
                 _uiState.value = PersonState.Loading
             }, onPostExecute = { person ->
                 _uiState.value = PersonState.Data(person)

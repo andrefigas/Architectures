@@ -26,16 +26,16 @@ android {
     }
 
     productFlavors {
-        mvc{}
-        mvp{}
-        mvvm{}
-        mvc_clean{}
-        mvp_clean{}
-        mvvm_clean{}
-        mvi_with_presenter{}
-        mvi_with_presenter_clean{}
-        mvi_with_viewmodel{}
-        mvi_with_viewmodel_clean{}
+        mvc{resValue 'string', 'app_name', 'MVC'}
+        mvp{resValue 'string', 'app_name', 'MVP'}
+        mvvm{resValue 'string', 'app_name', 'MVVM'}
+        mvc_clean{resValue 'string', 'app_name', 'MVC Clean'}
+        mvp_clean{resValue 'string', 'app_name', 'MVP Clean'}
+        mvvm_clean{resValue 'string', 'app_name', 'MVVM Clean'}
+        mvi_with_presenter{resValue 'string', 'app_name', 'MVI with Presenter'}
+        mvi_with_presenter_clean{resValue 'string', 'app_name', 'MVI with Presenter Clean'}
+        mvi_with_viewmodel{resValue 'string', 'app_name', 'MVI with ViewModel'}
+        mvi_with_viewmodel_clean{resValue 'string', 'app_name', 'MVI with ViewModel Clean'}
     }
 
     variantFilter { variant ->
@@ -82,16 +82,16 @@ android {
                             '../flavors/model/java',
                             '../flavors/intent/java'
             ]
-            manifest.srcFile '../flavors/mvi_with_viewmodel/AndroidManifest.xml'
+            manifest.srcFile '../flavors/mvi_with_presenter/AndroidManifest.xml'
         }
 
         mvi_with_presenter_clean{
             java.srcDirs = ['/src/main/java',
-                            '../flavors/mvi_with_presenter/java',
+                            '../flavors/mvi_with_presenter_clean/java',
                             '../flavors/clean_model/java',
                             '../flavors/clean_intent/java'
             ]
-            manifest.srcFile '../flavors/mvi_with_viewmodel/AndroidManifest.xml'
+            manifest.srcFile '../flavors/mvi_with_presenter_clean/AndroidManifest.xml'
         }
 
         mvi_with_viewmodel{
@@ -105,7 +105,7 @@ android {
 
         mvi_with_viewmodel_clean{
             java.srcDirs = ['/src/main/java',
-                            '../flavors/mvi_with_viewmodel/java',
+                            '../flavors/mvi_with_viewmodel_clean/java',
                             '../flavors/clean_model/java',
                             '../flavors/clean_intent/java'
             ]

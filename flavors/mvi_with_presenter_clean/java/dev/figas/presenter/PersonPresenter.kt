@@ -1,14 +1,18 @@
 package dev.figas.presenter
 
 import android.os.AsyncTask
+import dev.figas.domain.models.Person
+import dev.figas.domain.usecases.GetPersonUseCase
+import dev.figas.domain.usecases.UpdatePersonUseCase
 import dev.figas.intent.PersonIntent
-import dev.figas.model.Person
-import dev.figas.model.PersonModelContract
 import dev.figas.view.PersonView
 import dev.figas.vieweffect.PersonEffect
 import dev.figas.viewstate.PersonState
 
-class PersonPresenter(private val view : PersonView, private val model: PersonModelContract) : PersonPresenterContract {
+class PersonPresenter(private val view : PersonView,
+                      private val getPersonUseCase: GetPersonUseCase,
+                      private val updatePersonUseCase: UpdatePersonUseCase
+) : PersonPresenterContract {
 
     private val requests = mutableListOf<AsyncTask<*, *, *>>()
 
@@ -30,7 +34,8 @@ class PersonPresenter(private val view : PersonView, private val model: PersonMo
 
     private fun injectPerson(name : String) {
         requests.add(
-            model.injectPerson(Person(name),
+            updatePersonUseCase.execute(
+                Person(name),
                 onPreExecute = {
                     view.processPageState(PersonState.Loading)
                 },
@@ -45,7 +50,7 @@ class PersonPresenter(private val view : PersonView, private val model: PersonMo
 
     private fun fetchPerson() {
         requests.add(
-            model.providePerson(
+            getPersonUseCase.execute(
                 onPreExecute = {
                     view.processPageState(PersonState.Loading)
                 },

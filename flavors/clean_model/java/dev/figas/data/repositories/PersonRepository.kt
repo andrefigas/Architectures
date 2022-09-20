@@ -8,7 +8,7 @@ import dev.figas.data.models.PersonDataModel
 import dev.figas.domain.models.Person
 import dev.figas.domain.repositories.PersonRepoContract
 
-class PersonRepository( context: Context, val mapper: PersonMapper) : PersonRepoContract{
+class PersonRepository( context: Context, private val mapper: PersonMapper) : PersonRepoContract{
 
     companion object{
         const val PREFS = "prefs"

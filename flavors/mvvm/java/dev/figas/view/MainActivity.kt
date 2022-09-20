@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import dev.figas.R
+import dev.figas.model.Person
 import dev.figas.model.PersonModel
 import dev.figas.viewmodel.PersonViewModel
 import dev.figas.viewmodel.PersonViewModelFactory
@@ -30,11 +31,11 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         setupUI()
 
-        viewModel.data.observe(this) { person ->
+        viewModel.data.observe(this) { person : Person ->
             hideLoading()
             showPersonName(person.name)
         }
-        viewModel.insert.observe(this) { person ->
+        viewModel.insert.observe(this) { person : Person->
             hideLoading()
             showSavedPerson(person.name)
         }

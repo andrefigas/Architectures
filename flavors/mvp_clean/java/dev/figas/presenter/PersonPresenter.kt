@@ -1,6 +1,5 @@
 package dev.figas.presenter
 
-import android.annotation.SuppressLint
 import android.os.AsyncTask
 import dev.figas.domain.models.Person
 import dev.figas.domain.usecases.GetPersonUseCase
@@ -15,7 +14,6 @@ class PersonPresenter(private val view : PersonView,
 
     private val requests = mutableListOf<AsyncTask<*, *, *>>()
 
-    @SuppressLint("StaticFieldLeak")
     override fun injectPerson(name : String) {
         requests.add(
             updatePersonUseCase.execute(
@@ -33,7 +31,6 @@ class PersonPresenter(private val view : PersonView,
 
     }
 
-    @SuppressLint("StaticFieldLeak")
     override fun fetchPerson() {
         requests.add(
             getPersonUseCase.execute(

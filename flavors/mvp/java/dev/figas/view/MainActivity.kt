@@ -1,6 +1,5 @@
 package dev.figas.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -68,5 +67,4 @@ interface PersonView {
     fun hideLoading()
     fun showLoading()
     fun showPersonName(name: String)
-
 }

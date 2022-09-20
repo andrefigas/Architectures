@@ -1,6 +1,5 @@
 package dev.figas.viewmodel
 
-import android.annotation.SuppressLint
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +16,6 @@ class PersonViewModel(val model: PersonModelContract) : ViewModel() {
     private val _insert: MutableLiveData<Person> = MutableLiveData<Person>()
     val insert: LiveData<Person> = _insert
 
-    @SuppressLint("StaticFieldLeak")
     fun injectPerson(name: String) {
         requests.add(
             model.injectPerson(Person(name), onPreExecute = {
@@ -29,7 +27,6 @@ class PersonViewModel(val model: PersonModelContract) : ViewModel() {
 
     }
 
-    @SuppressLint("StaticFieldLeak")
     fun fetchPerson() {
         requests.add(
             model.providePerson(onPreExecute = {

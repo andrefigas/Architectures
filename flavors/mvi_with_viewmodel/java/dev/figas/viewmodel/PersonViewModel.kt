@@ -1,27 +1,27 @@
 package dev.figas.viewmodel
 
 import android.os.AsyncTask
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import dev.figas.intent.event.PersonEvent
 import dev.figas.model.Person
 import dev.figas.model.PersonModelContract
 import dev.figas.intent.vieweffect.PersonEffect
 import dev.figas.intent.viewstate.PersonState
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.PublishSubject
 
 
 class PersonViewModel(val model: PersonModelContract) : ViewModel() {
 
     private val _uiState : MutableLiveData<PersonState> = MutableLiveData(PersonState.Idle)
-    val uiState = _uiState
+    val uiState : LiveData<PersonState> = _uiState
 
-    private val _events = PublishSubject.create<PersonEvent>()
-    val events : Observable<PersonEvent> = _events
+    private val _events : MutableLiveData<PersonEvent> = MutableLiveData()
 
-    private val _effect = PublishSubject.create<PersonEffect>()
-    val effect : Observable<PersonEffect> = _effect
+    private val _effect : MutableLiveData<PersonEffect> = MutableLiveData()
+    val effect : LiveData<PersonEffect> = _effect
+
+    private val eventObserver : Observer<PersonEvent> by lazy {
+        Observer<PersonEvent> { event -> handleEvent(event) }
+    }
 
     private val requests = mutableListOf<AsyncTask<*, *, *>>()
 
@@ -30,14 +30,11 @@ class PersonViewModel(val model: PersonModelContract) : ViewModel() {
     }
 
     fun sendIntent(event : PersonEvent) {
-        _events.onNext(event)
+        _events.value = event
     }
 
     private fun subscribeEvents() {
-        events.subscribe { event->
-            handleEvent(event)
-        }
-
+        _events.observeForever(eventObserver)
     }
 
     private fun handleEvent(event: PersonEvent) {
@@ -57,7 +54,7 @@ class PersonViewModel(val model: PersonModelContract) : ViewModel() {
             model.injectPerson(Person(name), onPreExecute = {
                 _uiState.value = PersonState.Loading
             }, onPostExecute = { person ->
-                _effect.onNext(PersonEffect.OnPersonSaved(person))
+                _effect.value = PersonEffect.OnPersonSaved(person)
             })
         )
 
@@ -79,6 +76,8 @@ class PersonViewModel(val model: PersonModelContract) : ViewModel() {
         requests.forEach {
             it.cancel(true)
         }
+
+        _events.removeObserver(eventObserver)
     }
 
 }

@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.effect.subscribe{ effect ->
+        viewModel.effect.observe(this){ effect ->
             when(effect){
                 is PersonEffect.OnPersonSaved -> {
                     hideLoading()

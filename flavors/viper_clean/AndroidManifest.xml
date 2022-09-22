@@ -23,11 +23,8 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".view.SuccessActivity"
-            android:exported="true">
+        <activity android:name=".view.SuccessActivity"/>
 
-        </activity>
     </application>
 
 </manifest>
